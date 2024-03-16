@@ -5,7 +5,6 @@ const productSchema = new mongoose.Schema<ProductSchemaTypes>(
 	{
 		name: {
 			type: String,
-			// unique: true,
 			required: [true, "Please entered product name"],
 		},
 		price: {
@@ -17,8 +16,16 @@ const productSchema = new mongoose.Schema<ProductSchemaTypes>(
 			required: [true, "Please entered product stock"],
 		},
 		photo: {
-			type: String,
-			required: [true, "Please entered product photo"],
+			type: {
+				publicId: {
+					type: String,
+					required: true,
+				},
+				url: {
+					type: String,
+					required: true,
+				},
+			},
 		},
 		category: {
 			type: String,

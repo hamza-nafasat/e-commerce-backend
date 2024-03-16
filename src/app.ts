@@ -12,6 +12,7 @@ import productsRoutes from "./routes/products.routes.js";
 import { customErrorMiddleWare } from "./middlewares/errorHandler.js";
 import Stripe from "stripe";
 import cors from "cors";
+import { configureCloudinary } from "./utils/cloudinary.js";
 
 config({
 	path: "./.env",
@@ -56,6 +57,7 @@ app.use(customErrorMiddleWare);
 // =================================
 (async () => {
 	try {
+		await configureCloudinary();
 		await connectDB(mongoUrl, dbName);
 		//// Server id Listing if database successfully connected
 		app.listen(port, () => console.log(`app listening on ${port}`));

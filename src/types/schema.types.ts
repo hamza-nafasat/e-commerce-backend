@@ -15,7 +15,10 @@ export interface ProductSchemaTypes {
 	name: string;
 	price: number;
 	stock: number;
-	photo: string;
+	photo: {
+		publicId: string;
+		url: string;
+	};
 	category: string;
 	createdAt?: Date;
 	updatedAt?: Date;

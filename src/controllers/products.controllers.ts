@@ -1,15 +1,17 @@
-import { nodeCash } from "../app.js";
-import CustomError from "../utils/customClass.js";
-import Product from "../models/products.model.js";
-import { TryCatch } from "../middlewares/errorHandler.js";
 import { NextFunction, Request, Response } from "express";
-import { deletePhoto, invalidateNodeCash, responseFunc } from "../utils/features.js";
+import { isValidObjectId } from "mongoose";
+import { nodeCash } from "../app.js";
+import { TryCatch } from "../middlewares/errorHandler.js";
+import Product from "../models/products.model.js";
 import {
 	AllProductsQueryTypes,
 	CreateNewProductTypes,
 	searchBaseQueryTypes,
 } from "../types/apis.types.js";
-import { isValidObjectId } from "mongoose";
+import { removeFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
+import CustomError from "../utils/customClass.js";
+import { invalidateNodeCash, responseFunc } from "../utils/features.js";
+import getDataUri from "../utils/uriParser.js";
 
 // =========================================
 // http://localhost:8000/api/v1/products/new = CREATE NEW PRODUCT
@@ -22,14 +24,20 @@ export const createNewProduct = TryCatch(
 		if (!photo) return next(new CustomError("Please Enter Photo", 400));
 		//// if any field doesn't exist then delete photo and return an err response
 		if (!name || !price || !stock || !category) {
-			deletePhoto(photo.path);
+			// deletePhoto(photo.path);
 			return next(new CustomError("Please Enter All Fields", 400));
 		}
 		let product = await Product.findOne({ name: name });
 		//// if product already exist then delete photo and return an err response
-		if (product) {
-			deletePhoto(photo.path);
-			return next(new CustomError("Please Enter A Unique Name For New Product", 409));
+		if (product) return next(new CustomError("Please Enter A Unique Name For New Product", 409));
+		//// getting the url from parser and send file to cloudinary
+		const fileUrl = getDataUri(photo);
+		if (!fileUrl.content) {
+			return next(new CustomError("Error While Making a Url of File", 400));
+		}
+		const myCloud = await uploadOnCloudinary(fileUrl.content!, "products");
+		if (!myCloud?.public_id || !myCloud?.secure_url) {
+			return next(new CustomError("Error While Uploading File", 500));
 		}
 		//// if all fields exist and product does'nt exist then create a new product
 		product = await Product.create({
@@ -37,7 +45,10 @@ export const createNewProduct = TryCatch(
 			price: Number(price),
 			stock,
 			category: category.toLowerCase(),
-			photo: photo.path,
+			photo: {
+				publicId: myCloud.public_id,
+				url: myCloud.secure_url,
+			},
 		});
 		//// deleting nodeCash data bcz new product created
 		invalidateNodeCash({ isProducts: true, isAdmins: true });
@@ -125,8 +136,8 @@ export const deleteProduct = TryCatch(async (req, res, next) => {
 	if (!isValidObjectId(productId)) return next(new CustomError("Invalid Product Id", 400));
 	const product = await Product.findByIdAndDelete({ _id: productId });
 	if (!product) return next(new CustomError("Product Not Found", 404));
-	//// deleting image from uploads folder
-	deletePhoto(product.photo);
+	//// deleting image from cloudinary
+	await removeFromCloudinary(product.photo.publicId);
 	//// deleting nodeCash data bcz one product deleted
 	invalidateNodeCash({ isProducts: true, isAdmins: true, productId: String(product._id) });
 	//// sending response
@@ -137,23 +148,34 @@ export const deleteProduct = TryCatch(async (req, res, next) => {
 
 export const updateProduct = TryCatch(async (req, res, next) => {
 	const { productId } = req.params;
-	let product = await Product.findById(productId);
-	if (!product) return next(new CustomError("Product Not Found", 404));
-	//// if product is available in database then go next
+	if (!isValidObjectId(productId)) return next(new CustomError("Invalid Product Id", 404));
+	//// destructure data from body and file
 	const photo = req.file;
 	const { name, stock, price, category } = req.body;
 	//// if not provided anything
 	if (!name && !price && !stock && !category && !photo) {
 		return next(new CustomError("Please Enter Something First", 400));
 	}
-	if (photo) {
-		deletePhoto(product.photo);
-		product.photo = photo.path;
-	}
+	//// if product is available in database then go next
+	let product = await Product.findById(productId);
+	if (!product) return next(new CustomError("Product Not Found", 400));
 	if (name) product.name = name;
 	if (stock) product.stock = stock;
 	if (price) product.price = price;
 	if (category) product.category = category;
+	if (photo) {
+		await removeFromCloudinary(product.photo.publicId);
+		//// getting the url from parser and send file to cloudinary
+		const fileUrl = getDataUri(photo);
+		if (!fileUrl.content) {
+			return next(new CustomError("Error While Making a Url of File", 400));
+		}
+		const myCloud = await uploadOnCloudinary(fileUrl.content!, "products");
+		if (!myCloud?.public_id || !myCloud?.secure_url) {
+			return next(new CustomError("Error While Uploading File", 500));
+		}
+		product.photo = { publicId: myCloud.public_id, url: myCloud.url };
+	}
 	//// now update the product
 	await product.save();
 	//// deleting nodeCash data bcz one product update
