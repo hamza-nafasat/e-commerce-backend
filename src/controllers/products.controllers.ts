@@ -228,8 +228,6 @@ export const getAllProducts = TryCatch(
 		const totalPages = Math.ceil(totalSearchProducts / onePageLimit);
 		//// sending response with data
 		return responseFunc(res, "", 200, {
-			totalFilteredProducts: filteredProducts.length,
-			totalSearchProducts,
 			totalPages,
 			filteredProducts,
 		});
