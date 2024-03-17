@@ -62,7 +62,7 @@ export const invalidateNodeCash = ({
 }: InvalidateNodeCash) => {
 	const cacheKeys = [];
 	if (isProducts) {
-		cacheKeys.push("latest-products", "categories", "admin-products");
+		cacheKeys.push("latest-products", "categories", "admin-products", "high-price");
 		if (productId) {
 			if (typeof productId === "string") {
 				cacheKeys.push(`product-${productId}`);
