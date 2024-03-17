@@ -76,6 +76,23 @@ export const getLatestProducts = TryCatch(async (req, res, next) => {
 });
 
 // ================================================
+// http://localhost:8000/api/v1/products/high-price = High price
+// ================================================
+
+export const getHighPrice = TryCatch(async (req, res, next) => {
+	let highPrice;
+	const nodeCashKey = "high-price";
+	//// fetching and cashing data in nodeCash
+	if (nodeCash.has(nodeCashKey)) {
+		highPrice = JSON.parse(nodeCash.get(nodeCashKey) as string);
+	} else {
+		highPrice = await Product.find().sort({ price: -1 }).limit(1).select("price");
+		if (!highPrice) return next(new CustomError("HighPrice Not Found", 404));
+		nodeCash.set(nodeCashKey, JSON.stringify(highPrice));
+	}
+	return responseFunc(res, "", 200, highPrice);
+});
+// ================================================
 // http://localhost:8000/api/v1/products/categories = CATEGORIES
 // ================================================
 

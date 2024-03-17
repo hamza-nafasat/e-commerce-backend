@@ -5,6 +5,7 @@ import {
 	getAdminProducts,
 	getAllProducts,
 	getCategories,
+	getHighPrice,
 	getLatestProducts,
 	getSingleProduct,
 	updateProduct,
@@ -22,6 +23,9 @@ app.get("/all-products", getAllProducts);
 
 // get all categories
 app.get("/categories", getCategories);
+
+// get all categories
+app.get("/high-price", getHighPrice);
 
 app.get("/admin-products", isAdmin, getAdminProducts);
 
