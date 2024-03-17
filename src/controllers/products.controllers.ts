@@ -215,7 +215,6 @@ export const getAllProducts = TryCatch(
 			Product.find(searchBaseQuery)
 				.skip(skipProducts)
 				.limit(onePageLimit)
-				.select("name price")
 				.lean()
 				.sort(
 					sort && {
