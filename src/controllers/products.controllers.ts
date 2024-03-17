@@ -72,7 +72,7 @@ export const getLatestProducts = TryCatch(async (req, res, next) => {
 		if (!products) return next(new CustomError("Products Not Found", 404));
 		nodeCash.set(nodeCashKey, JSON.stringify(products));
 	}
-	return responseFunc(res, "Products Received successfully", 200, products);
+	return responseFunc(res, "", 200, products);
 });
 
 // ================================================
@@ -90,7 +90,7 @@ export const getCategories = TryCatch(async (req, res, next) => {
 		if (!categories) return next(new CustomError("Categories Not Found", 404));
 		nodeCash.set(nodeCashKey, JSON.stringify(categories));
 	}
-	return responseFunc(res, "Categories Received", 200, categories);
+	return responseFunc(res, "", 200, categories);
 });
 
 // ===================================================
@@ -107,7 +107,7 @@ export const getAdminProducts = TryCatch(async (req, res, next) => {
 		products = await Product.find();
 		nodeCash.set(nodeCashKey, JSON.stringify(products));
 	}
-	return responseFunc(res, "All Products Received", 200, products);
+	return responseFunc(res, "", 200, products);
 });
 
 // ================================================
@@ -126,7 +126,7 @@ export const getSingleProduct = TryCatch(async (req, res, next) => {
 		if (!product) return next(new CustomError("Product Not Found", 404));
 		nodeCash.set(nodeCashKey, JSON.stringify(product));
 	}
-	return responseFunc(res, "Product Received Successfully", 200, product);
+	return responseFunc(res, "", 200, product);
 });
 
 // =========== same route =========== = DELETE SINGLE PRODUCT
@@ -193,7 +193,7 @@ export const getAllProducts = TryCatch(
 		const { category, price, search, sort } = req.query;
 		////  creating a logic of pages dataLimit on one page and skip data on page change
 		const page = Number(req.query.page) || 1;
-		const onePageLimit = Number(process.env.PRODUCT_PER_PAGE) || 6;
+		const onePageLimit = Number(process.env.PRODUCT_PER_PAGE) || 8;
 		const skipProducts = onePageLimit * (page - 1);
 		//// creating searchQuery according given fields
 		const searchBaseQuery: searchBaseQueryTypes = {};
