@@ -193,7 +193,7 @@ export const getAllProducts = TryCatch(
 		const { category, price, search, sort } = req.query;
 		////  creating a logic of pages dataLimit on one page and skip data on page change
 		const page = Number(req.query.page) || 1;
-		const onePageLimit = Number(process.env.PRODUCT_PER_PAGE) || 8;
+		const onePageLimit = Number(process.env.PRODUCT_PER_PAGE) || 10;
 		const skipProducts = onePageLimit * (page - 1);
 		//// creating searchQuery according given fields
 		const searchBaseQuery: searchBaseQueryTypes = {};
