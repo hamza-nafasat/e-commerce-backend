@@ -131,7 +131,7 @@ export const processSingleOrder = TryCatch(async (req, res, next) => {
 		userId: order.userId,
 		orderId: order._id.toString(),
 	});
-	responseFunc(res, "Order Processed Successfully", 200, order);
+	responseFunc(res, "", 200, order);
 });
 
 export const deleteSingleOrder = TryCatch(async (req, res, next) => {
