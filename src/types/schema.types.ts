@@ -49,7 +49,8 @@ export interface OrderSchemaTypes {
                 url: string;
             };
             price: number;
-            Quantity: number;
+            quantity: number;
+            stock:number
             productId: string;
         }
     ];

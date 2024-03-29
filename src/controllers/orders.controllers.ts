@@ -30,14 +30,8 @@ export const newOrderCreate = TryCatch(async (req: Request<{}, {}, newOrderReqTy
 
     //// checking if all products are valid
     for (let item of orderItem) {
-        if (!isValidObjectId(item.productId)) {
-            return next(new CustomError("Invalid Product Id", 400));
-        }
-        const product = await Product.findById(item.productId).select("stock name");
-        if (!product) return next(new CustomError("Invalid Product Id", 400));
-        //// checking if product stock is enough
-        if (item.Quantity > product.stock) {
-            return next(new CustomError(`Insufficient Stock Available For ${product.name}`, 400));
+        if (item.quantity > item.stock) {
+            return next(new CustomError("We Only Have " + item.stock + " " + item.name + " In Stock", 400));
         }
     }
     //// creating a order
