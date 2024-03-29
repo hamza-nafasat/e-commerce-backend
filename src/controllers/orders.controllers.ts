@@ -14,7 +14,7 @@ import Product from "../models/products.model.js";
 
 export const newOrderCreate = TryCatch(async (req: Request<{}, {}, newOrderReqTypes>, res, next) => {
     const {
-        orderItem,
+        cartItem,
         shippingInfo,
         shippingCharges,
         discount = 0,
@@ -24,19 +24,19 @@ export const newOrderCreate = TryCatch(async (req: Request<{}, {}, newOrderReqTy
         userId,
     } = req.body;
     //// ensuring that all required fields are given
-    if (!orderItem || !shippingCharges || !shippingInfo || !subTotal || !total || !userId) {
+    if (!cartItem || !shippingCharges || !shippingInfo || !subTotal || !total || !userId) {
         return next(new CustomError("Please Provide All Fields", 400));
     }
 
     //// checking if all products are valid
-    for (let item of orderItem) {
+    for (let item of cartItem) {
         if (item.quantity > item.stock) {
             return next(new CustomError("We Only Have " + item.stock + " " + item.name + " In Stock", 400));
         }
     }
     //// creating a order
     const order = await Order.create({
-        orderItem,
+        cartItem,
         shippingInfo,
         shippingCharges,
         discount,
@@ -46,13 +46,13 @@ export const newOrderCreate = TryCatch(async (req: Request<{}, {}, newOrderReqTy
         userId,
     });
     //// reducing stock from products bcz some items ordered
-    await reduceStock(orderItem);
+    await reduceStock(cartItem);
     //// invalidate cash items bcz of order
     invalidateNodeCash({
         isProducts: true,
         isOrders: true,
         isAdmins: true,
-        productId: order.orderItem.map((item) => String(item.productId)),
+        productId: order.cartItem.map((item) => String(item.productId)),
     });
     responseFunc(res, "Your Order Placed Successfully", 201);
 });

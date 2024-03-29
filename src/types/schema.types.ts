@@ -41,7 +41,7 @@ export interface OrderSchemaTypes {
         country: string;
         pinCode: number;
     };
-    orderItem: [
+    cartItem: [
         {
             name: string;
             photo: {
@@ -50,7 +50,7 @@ export interface OrderSchemaTypes {
             };
             price: number;
             quantity: number;
-            stock:number
+            stock: number;
             productId: string;
         }
     ];

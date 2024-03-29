@@ -1,7 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 import { OrderSchemaTypes } from "../types/schema.types.js";
 
-const singleOrderItem = {
+const singleCartItem = {
     name: String,
     photo: {
         publicId: String,
@@ -39,7 +39,7 @@ const orderSchema = new Schema<OrderSchemaTypes>(
                 required: true,
             },
         },
-        orderItem: [singleOrderItem],
+        cartItem: [singleCartItem],
         userId: {
             type: String,
             ref: "User",
