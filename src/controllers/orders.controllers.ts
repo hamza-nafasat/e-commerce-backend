@@ -72,7 +72,7 @@ export const getMyOrders = TryCatch(async (req, res, next) => {
         if (!myOrders) return next(new CustomError("Invalid key or Orders Not Found", 404));
         nodeCash.set(nodeCashKey, JSON.stringify(myOrders));
     }
-    responseFunc(res, "", 200, { length: myOrders.length, myOrders });
+    responseFunc(res, "", 200, myOrders);
 });
 
 // =========================================
@@ -89,7 +89,7 @@ export const getAllOrders = TryCatch(async (req, res, next) => {
         if (!allOrders) return next(new CustomError("Orders Not Found", 404));
         nodeCash.set(nodeCashKey, JSON.stringify(allOrders));
     }
-    responseFunc(res, "", 200, { length: allOrders.length, allOrders });
+    responseFunc(res, "", 200, allOrders);
 });
 
 // ================================================
@@ -139,7 +139,11 @@ export const processSingleOrder = TryCatch(async (req, res, next) => {
         userId: order.userId,
         orderId: order._id.toString(),
     });
-    responseFunc(res, "", 200, order);
+    responseFunc(
+        res,
+        `${order.status === "processing" ? "Order Shipped Successfully" : "Order Delivered Successfully"}`,
+        200
+    );
 });
 
 export const deleteSingleOrder = TryCatch(async (req, res, next) => {
