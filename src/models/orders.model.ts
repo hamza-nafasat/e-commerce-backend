@@ -2,16 +2,36 @@ import { Schema, Types, model } from "mongoose";
 import { OrderSchemaTypes } from "../types/schema.types.js";
 
 const singleCartItem = {
-    name: String,
-    photo: {
-        publicId: String,
-        url: String,
+    name: {
+        type: String,
+        required: true,
     },
-    price: Number,
-    Quantity: Number,
+    photo: {
+        publicId: {
+            type: String,
+            required: true,
+        },
+        url: {
+            type: String,
+            required: true,
+        },
+    },
+    price: {
+        type: Number,
+        required: true,
+    },
+    Quantity: {
+        type: Number,
+        required: true,
+    },
+    stock: {
+        type: Number,
+        required: true,
+    },
     productId: {
         type: Types.ObjectId,
         ref: "Product",
+        required: true,
     },
 };
 
