@@ -20,7 +20,7 @@ const singleCartItem = {
         type: Number,
         required: true,
     },
-    Quantity: {
+    quantity: {
         type: Number,
         required: true,
     },
