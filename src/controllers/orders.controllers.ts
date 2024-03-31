@@ -68,7 +68,7 @@ export const getMyOrders = TryCatch(async (req, res, next) => {
     if (nodeCash.has(nodeCashKey)) {
         myOrders = JSON.parse(nodeCash.get(nodeCashKey) as string);
     } else {
-        myOrders = await Order.find({ user: id });
+        myOrders = await Order.find({ userId: id });
         if (!myOrders) return next(new CustomError("Invalid key or Orders Not Found", 404));
         nodeCash.set(nodeCashKey, JSON.stringify(myOrders));
     }
