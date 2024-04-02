@@ -129,7 +129,6 @@ export const processSingleOrder = TryCatch(async (req, res, next) => {
     } else {
         return next(new CustomError("Order Already Delivered", 400));
     }
-
     await order.save();
     //// invalidate nodeCash after updating a order
     invalidateNodeCash({
@@ -141,7 +140,7 @@ export const processSingleOrder = TryCatch(async (req, res, next) => {
     });
     responseFunc(
         res,
-        `${order.status === "processing" ? "Order Shipped Successfully" : "Order Delivered Successfully"}`,
+        `${order.status === "shipped" ? "Order Shipped Successfully" : "Order Delivered Successfully"}`,
         200
     );
 });
