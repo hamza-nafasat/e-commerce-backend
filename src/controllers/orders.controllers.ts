@@ -24,10 +24,18 @@ export const newOrderCreate = TryCatch(async (req: Request<{}, {}, newOrderReqTy
         userId,
     } = req.body;
     //// ensuring that all required fields are given
-    if (!cartItem || !shippingCharges || !shippingInfo || !subTotal || !total || !userId) {
+    if (
+        !cartItem ||
+        !shippingInfo ||
+        !subTotal ||
+        !total ||
+        !userId ||
+        (!shippingCharges && shippingCharges !== 0) ||
+        (!discount && discount !== 0) ||
+        (!tax && tax !== 0)
+    ) {
         return next(new CustomError("Please Provide All Fields", 400));
     }
-
     //// checking if all products are valid
     for (let item of cartItem) {
         if (item.quantity > item.stock) {
