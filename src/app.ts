@@ -15,7 +15,7 @@ import cors from "cors";
 import { configureCloudinary } from "./utils/cloudinary.js";
 
 config({
-	path: "./.env",
+    path: "./.env",
 });
 
 // Constant Variables
@@ -32,7 +32,12 @@ export const nodeCash = new NodeCache();
 export const myStripe = new Stripe(stripeKey);
 
 // Other Middlewares
-app.use(cors());
+app.use(
+    cors({
+        origin: "*",
+        credentials: true,
+    })
+);
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -44,7 +49,7 @@ app.use("/api/v1/payments", paymentRoutes);
 app.use("/api/v1/admin", statsRoutes);
 
 app.get("/", (req: Request, res: Response) => {
-	res.send(`App is running on <a href={${process.env.FRONTEND_ULR}}>Frontend url</a>`);
+    res.send(`App is running on <a href={${process.env.FRONTEND_ULR}}>Frontend url</a>`);
 });
 
 // Static Folder for Pics
@@ -56,13 +61,13 @@ app.use(customErrorMiddleWare);
 // CONNECTING MONGODB ASYNCHRONOUSLY
 // =================================
 (async () => {
-	try {
-		await configureCloudinary();
-		await connectDB(mongoUrl, dbName);
-		//// Server id Listing if database successfully connected
-		app.listen(port, () => console.log(`app listening on ${port}`));
-	} catch (err: any) {
-		console.error(`Failed to start server ${err.message}`);
-		process.exit(1);
-	}
+    try {
+        await configureCloudinary();
+        await connectDB(mongoUrl, dbName);
+        //// Server id Listing if database successfully connected
+        app.listen(port, () => console.log(`app listening on ${port}`));
+    } catch (err: any) {
+        console.error(`Failed to start server ${err.message}`);
+        process.exit(1);
+    }
 })();
