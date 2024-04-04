@@ -65,7 +65,7 @@ const orderSchema = new Schema<OrderSchemaTypes>(
             ref: "User",
             required: true,
         },
-        subTotal: {
+        subtotal: {
             type: Number,
             required: true,
         },

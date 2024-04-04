@@ -18,14 +18,14 @@ export const newOrderCreate = TryCatch(async (req: Request<{}, {}, newOrderReqTy
         shippingInfo,
         shippingCharges,
         discount = 0,
-        subTotal,
+        subtotal,
         tax = 0,
         total,
         userId,
     } = req.body;
     //// ensuring that all required fields are given
     console.log(req.body);
-    if (!cartItem || !shippingInfo || !subTotal || !total || !userId) {
+    if (!cartItem || !shippingInfo || !subtotal || !total || !userId) {
         return next(new CustomError("Please Provide All Fields", 400));
     }
     //// checking if all products are valid
@@ -40,7 +40,7 @@ export const newOrderCreate = TryCatch(async (req: Request<{}, {}, newOrderReqTy
         shippingInfo,
         shippingCharges,
         discount,
-        subTotal,
+        subtotal,
         tax,
         total,
         userId,

@@ -26,7 +26,7 @@ export interface ProductSchemaTypes {
 
 export interface OrderSchemaTypes {
     userId: string;
-    subTotal: number;
+    subtotal: number;
     tax: number;
     shippingCharges: number;
     discount: number;
