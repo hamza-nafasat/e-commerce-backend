@@ -73,7 +73,9 @@ export const invalidateNodeCash = ({
     }
     if (isOrders) {
         cacheKeys.push("all-orders");
-        if (userId) cacheKeys.push(`my-orders-${userId}`);
+        if (userId) {
+            cacheKeys.push(`my-orders-${userId}`);
+        }
         if (orderId) cacheKeys.push(`order-${orderId}`);
     }
     if (isAdmins) {

@@ -24,7 +24,6 @@ export const newOrderCreate = TryCatch(async (req: Request<{}, {}, newOrderReqTy
         userId,
     } = req.body;
     //// ensuring that all required fields are given
-    console.log(req.body);
     if (!cartItem || !shippingInfo || !subtotal || !total || !userId) {
         return next(new CustomError("Please Provide All Fields", 400));
     }
@@ -53,6 +52,7 @@ export const newOrderCreate = TryCatch(async (req: Request<{}, {}, newOrderReqTy
         isOrders: true,
         isAdmins: true,
         productId: order.cartItem.map((item) => String(item.productId)),
+        userId: String(userId),
     });
     responseFunc(res, "Your Order Placed Successfully", 201);
 });
@@ -63,14 +63,14 @@ export const newOrderCreate = TryCatch(async (req: Request<{}, {}, newOrderReqTy
 
 export const getMyOrders = TryCatch(async (req, res, next) => {
     const { id } = req.query;
-    let nodeCashKey = `my-orders-${id}`;
+    let myNodeCash = `my-orders-${id}`;
     let myOrders = [];
-    if (nodeCash.has(nodeCashKey)) {
-        myOrders = JSON.parse(nodeCash.get(nodeCashKey) as string);
+    if (nodeCash.has(myNodeCash)) {
+        myOrders = JSON.parse(nodeCash.get(myNodeCash) as string);
     } else {
         myOrders = await Order.find({ userId: id }).populate("userId", "name");
         if (!myOrders) return next(new CustomError("Invalid key or Orders Not Found", 404));
-        nodeCash.set(nodeCashKey, JSON.stringify(myOrders));
+        nodeCash.set(myNodeCash, JSON.stringify(myOrders));
     }
     responseFunc(res, "", 200, myOrders);
 });
