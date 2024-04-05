@@ -114,9 +114,9 @@ export const dashboardStats = TryCatch(async (req, res, next) => {
         //// add total counts for these all categories
         //// -----------------------------------------
         const totalCounts = {
-            product: productsCount,
-            user: usersCount,
-            order: ordersCount,
+            products: productsCount,
+            users: usersCount,
+            orders: ordersCount,
             revenue: ordersForRevenue.reduce((acc, order) => acc + (order.total || 0), 0),
         };
         //// making the revenue and transaction chart data for last six months
