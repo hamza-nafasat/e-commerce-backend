@@ -20,7 +20,7 @@ config({
 
 // Constant Variables
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 const mongoUrl = process.env.MONGODB_URL || "";
 const dbName = process.env.DB_NAME || "";
 const stripeKey = process.env.STRIPE_SECRET_KEY || "";

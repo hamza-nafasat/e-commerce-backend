@@ -1,10 +1,5 @@
 import express, { Express } from "express";
-import {
-	createUser,
-	deleteUser,
-	getAllUsers,
-	getSingleUser,
-} from "../controllers/users.controllers.js";
+import { createUser, deleteUser, getAllUsers, getSingleUser } from "../controllers/users.controllers.js";
 import { isAdmin } from "../middlewares/auth.js";
 
 const app: Express = express();
@@ -16,6 +11,6 @@ app.get("/all", isAdmin, getAllUsers);
 app.post("/new", createUser);
 
 // get one user or delete one user
-app.route("/one/:_id").get(getSingleUser).delete(deleteUser);
+app.route("/one/:_id").get(getSingleUser).delete(isAdmin, deleteUser);
 
 export default app;
