@@ -165,17 +165,15 @@ export const categoriesPercentageFunc = async ({
     allProductsCategories: string[];
     productsCount: number;
 }) => {
-    let productsCategoryPercentage: Record<string, number>[] = [];
+    let productsCategoryPercentage: Record<string, number> = {};
     const allCategoriesCountPromiseArr = allProductsCategories.map((category) => {
         return Product.countDocuments({ category });
     });
     const allProductsCategoryCounts = await Promise.all(allCategoriesCountPromiseArr);
-
     allProductsCategories.forEach((category, i) => {
-        productsCategoryPercentage.push({
-            [category]: Math.round((allProductsCategoryCounts[i] / productsCount) * 100),
-        });
+        productsCategoryPercentage[category] = Math.round(
+            (allProductsCategoryCounts[i] / productsCount) * 100
+        );
     });
-
     return productsCategoryPercentage;
 };
