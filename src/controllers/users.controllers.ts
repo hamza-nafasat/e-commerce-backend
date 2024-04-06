@@ -33,7 +33,7 @@ export const createUser = TryCatch(
 // ======================================
 
 export const getAllUsers = TryCatch(async (req, res, next) => {
-    const users = await User.find();
+    const users = await User.find().sort({ createdAt: -1 });
     return responseFunc(res, "", 200, users);
 });
 
