@@ -6,7 +6,6 @@ import Order from "../models/orders.model.js";
 import { newOrderReqTypes } from "../types/apis.types.js";
 import CustomError from "../utils/customClass.js";
 import { invalidateNodeCash, reduceStock, responseFunc } from "../utils/features.js";
-import Product from "../models/products.model.js";
 
 // =========================================
 // http://localhost:8000/api/v1/orders/new =  CREATE NEW ORDER
@@ -68,7 +67,7 @@ export const getMyOrders = TryCatch(async (req, res, next) => {
     if (nodeCash.has(myNodeCash)) {
         myOrders = JSON.parse(nodeCash.get(myNodeCash) as string);
     } else {
-        myOrders = await Order.find({ userId: id }).populate("userId", "name");
+        myOrders = await Order.find({ userId: id }).populate("userId", "name").sort({ createdAt: -1 });
         if (!myOrders) return next(new CustomError("Invalid key or Orders Not Found", 404));
         nodeCash.set(myNodeCash, JSON.stringify(myOrders));
     }
