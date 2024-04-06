@@ -85,7 +85,7 @@ export const getAllOrders = TryCatch(async (req, res, next) => {
     if (nodeCash.has(nodeCashKey)) {
         allOrders = JSON.parse(nodeCash.get(nodeCashKey) as string);
     } else {
-        allOrders = await Order.find().populate("userId", "name");
+        allOrders = await Order.find().populate("userId", "name").sort({ createdAt: -1 });
         if (!allOrders) return next(new CustomError("Orders Not Found", 404));
         nodeCash.set(nodeCashKey, JSON.stringify(allOrders));
     }
