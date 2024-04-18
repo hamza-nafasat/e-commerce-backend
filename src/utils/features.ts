@@ -98,6 +98,7 @@ export const calculatePercentage = (current: number, last: number) => {
     }
     return Number(percentage.toFixed(2));
 };
+
 // ====================================================
 // adding data count in arr according every month count
 // ====================================================
