@@ -103,13 +103,13 @@ export const dashboardStats = TryCatch(async (req, res, next) => {
         //// calculate the percentage between this and last month
         //// ----------------------------------------------------
         const thisToLastMonthPercentage = {
-            products: calculatePercentage(thisMonthProducts?.length, lastMonthProducts?.length).toFixed(2),
-            users: calculatePercentage(thisMonthUsers?.length, lastMonthUsers?.length).toFixed(2),
-            orders: calculatePercentage(thisMonthOrders?.length, lastMonthOrders?.length).toFixed(2),
+            products: calculatePercentage(thisMonthProducts?.length, lastMonthProducts?.length),
+            users: calculatePercentage(thisMonthUsers?.length, lastMonthUsers?.length),
+            orders: calculatePercentage(thisMonthOrders?.length, lastMonthOrders?.length),
             revenue: calculatePercentage(
                 thisMonthOrders.reduce((acc, order) => acc + (order.total || 0), 0),
                 lastMonthOrders.reduce((acc, order) => acc + (order.total || 0), 0)
-            ).toFixed(2),
+            ),
         };
         //// add total counts for these all categories
         //// -----------------------------------------
